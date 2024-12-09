@@ -1,9 +1,10 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express()
 
 const ejs = require("ejs");
 
-const {connection} = require("./connection/db");
+// const {connection} = require("./connection/db");
 const taskRoutes = require("./controller/task.routes");
 const task = require("./model/model.task");
 
@@ -14,6 +15,14 @@ app.set("view engine", "ejs");
 app.use("/tasks", taskRoutes);
 
 const port = 8888;
+
+mongoose.connect("mongodb+srv://paghadalpriyanshi704:helloradhu_123@cluster0.2hyok.mongodb.net/To-Do_App", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+})
+.then(() => console.log("Connected to MongoDB via Mongoose!"))
+.catch((err) => console.error("Connection error:", err));
 
 app.get("/", async(req,res) => {
     let tasks = await task.find()
@@ -56,6 +65,6 @@ app.post("/editData/:id", async (req, res) => {
 })
 
 app.listen(port, async() => {
-    await connection;
+    // await connection;
     console.log("server is running at port ", port);
 })
